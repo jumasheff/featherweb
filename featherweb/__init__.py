@@ -91,17 +91,18 @@ class FeatherWeb(object):
         
 class HTTPRequest():
 
-    def __init__(self, client, request, content_type="text/html; charset=utf-8", status="200", headers={}):
+    def __init__(self, client, request, content_type="text/html; charset=utf-8", status="200", reason="OK", headers={}):
         """ Utility object for HTTP request responses. """
         self.client = client
         self.method, self.path, self.proto = request.decode().split()
         self.content_type = content_type
         self.status = status
+        self.reason = reason
         self.headers = headers
 
 
     def __headers(self):
-        self.client.sendall("HTTP/1.0 %s NA\r\n" % self.status)
+        self.client.sendall("HTTP/1.0 %s %s\r\n" % (self.status, self.reason))
         self.client.sendall("Content-Type: ")
         self.client.sendall(self.content_type)
         if not self.headers:
